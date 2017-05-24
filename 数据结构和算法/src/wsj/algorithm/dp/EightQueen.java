@@ -1,0 +1,87 @@
+package wsj.algorithm.dp;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
+import javax.swing.plaf.metal.MetalIconFactory.FolderIcon16;
+
+/**
+ * 回溯法 ---> 8皇后问题.
+ *
+ */
+public class EightQueen {
+
+	// 最大皇后个数.
+	public static final int MAX_QUEEN_COUTN = 8;
+	// 每列上皇后的放置位置.
+	public static int[] cols = new int[MAX_QUEEN_COUTN];
+	// 方案书
+	public int num = 0;
+	
+	/**
+	 * 获取第n个皇后的位置.
+	 * @param n
+	 */
+	public void getCount(int n){
+		// 记录第n列上位置状态.
+		boolean[] rows = new boolean[MAX_QUEEN_COUTN];
+		int delta = 0;
+		Arrays.fill(rows, true);
+		
+		for(int i =0 ; i < n ;i ++){
+			// 同行不能用.
+			rows[cols[i]] = false;
+			// 右上角
+			delta = n - i;
+			if (cols[i] + delta < MAX_QUEEN_COUTN) {
+				rows[cols[i] + delta] = false;
+			}
+			// 左下角
+			if (cols[i] - delta >= 0) {
+				rows[cols[i] - delta] = false;
+			}
+		}
+		// 此时就可以可以使用的就已经出来了. 遍历可用点.
+		for(int i= 0 ;i < MAX_QUEEN_COUTN ; i ++){
+			if (!rows[i]) {
+				continue;
+			}
+			cols[n] = i;
+			
+			if (n < MAX_QUEEN_COUTN-1) {
+				// 不是最后一列, 获取下一列.
+				getCount(n + 1);
+			}else {
+				// 最后一列. 完成.一条
+				num ++;
+				printQueen();	
+			}
+		}
+	}
+	
+	/**
+	 * 打印皇后.
+	 */
+	private void printQueen() {
+		
+		System.out.println("方案 : " + num);
+		char[][] queen = new char[MAX_QUEEN_COUTN][MAX_QUEEN_COUTN];
+		for(int i= 0 ;i < MAX_QUEEN_COUTN ;i++)
+			Arrays.fill(queen[i], '+');
+		for(int i= 0 ;i < MAX_QUEEN_COUTN ;i++){
+			queen[cols[i]][i] = 'Q';
+		}
+		for(int i = 0;i < MAX_QUEEN_COUTN ; i++){
+			System.out.println(Arrays.toString(queen[i]));
+		}
+	}
+
+
+
+
+	public static void main(String[] args) {
+		new EightQueen().getCount(0);
+		
+	}
+
+}
